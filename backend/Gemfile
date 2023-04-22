@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+gem "rails", "~> 6"
+
+# source "https://rubygems.org/" で、このアプリケーションで使用するgemが公開されている場所を指定しています。
+# git_source ブロックは、GitHubからのgemの取得方法を定義するために使用されます。
+# gem "rails", "~> 6" で、Railsフレームワークのバージョン6をインストールするよう指示しています。 ~>演算子は、バージョンの範囲を指定するために使用されます。たとえば、 ~> 6 は6.xの最新バージョンを指定し、 ~> 6.0 は6.0.xの最新バージョンを指定します。
+# このGemfileには、他の依存関係が含まれていないため、Railsアプリケーションの依存関係はRails本体だけで構成されています。このGemfileは、Dockerfileの bundle install コマンドで使用されます。

@@ -1,0 +1,35 @@
+version: "3"
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - /tmp/dockerdir:/etc/mysql/conf.d/
+    ports:
+      - 3306:3306
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+      - ./vendor/bundle:/myapp/vendor/bundle
+    environment:
+      TZ: Asia/Tokyo
+      RAILS_ENV: development
+    ports:
+      - "3001:3000"
+    depends_on:
+      - db
+volumes:
+  mysql-data:
+
+# version はDocker Composeのバージョンを指定しています。
+# services セクションには、実行するDockerコンテナの設定が含まれています。
+# db サービスは、MySQL 8.0のDockerイメージを使用しています。MYSQL_ROOT_PASSWORD 環境変数を設定し、MySQLのルートパスワードを指定しています。command には、MySQLのデフォルト認証プラグインを mysql_native_password に設定するオプションが指定されています。volumes は、MySQLのデータを永続化するために、mysql-data ボリュームと /tmp/dockerdir をマウントしています。ports は、コンテナ内のポート3306をホストのポート3306にマッピングしています。
+# api サービスは、現在のディレクトリからDockerfileを使用してイメージをビルドします。command には、Railsアプリを起動するためのコマンドが指定されています。volumes は、ホストのカレントディレクトリとアプリケーションのベンダーディレクトリをマウントします。environment には、タイムゾーンとRailsの環境変数が設定されています。ports は、コンテナ内のポート3000をホストのポート3001にマッピングしています。また、depends_on によって、 db サービスが起動する前に api サービスが起動するように依存関係が設定されています。
+# 最後に、volumes セクションには、MySQLのデータを永続化するために mysql-data ボリュームを定義しています。
