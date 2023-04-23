@@ -1,0 +1,25 @@
+default: &default
+  adapter: mysql2
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: password # デフォルトだと空欄になっているはずなので変更
+  host: db # デフォルトだとlocalhostになっているはずなので変更
+
+development:
+  <<: *default
+  database: myapp_development
+
+test:
+  <<: *default
+  database: myapp_test
+
+production:
+  <<: *default
+  database: <%= ENV["DATABASE_NAME"] %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+  password: <%= ENV["DATABASE_PASSWORD"] %>
+  host: <%= ENV["DATABASE_HOST"] %>
+
+# defaultという名前の接続設定を定義し、MySQLデータベースを使用するように指定しています。エンコーディングはutf8mb4に設定し、最大コネクション数は5に設定しています。また、接続に使用するユーザー名、パスワード、ホスト名も指定しています。
+# development、test、productionの各環境に対して、default接続設定を継承しつつ、それぞれのデータベース名を指定しています。production環境では、データベース名、ユーザー名、パスワード、ホスト名を環境変数から取得するようにしています。これは、本番環境で機密情報をコードに埋め込まないための一般的なプラクティスです。
